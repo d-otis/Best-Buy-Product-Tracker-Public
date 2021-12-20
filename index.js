@@ -69,6 +69,9 @@ const checkBestBuy = async () => {
         }
       });
   } catch (error) {
+    mailOptions.subject = "There was an error!";
+    mailOptions.text = error;
+    sendMail();
     console.log({ error });
   }
 };
