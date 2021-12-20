@@ -30,10 +30,6 @@ const mailOptions = {
   text: "Go get your PS5 at Best Buy!!",
 };
 
-const requestsPerHour = 120; // Amount of API requests each hour.
-const emailsPerHour = 4; // Amount of success emails sent per hour
-const totalEmailCounter = requestsPerHour / emailsPerHour;
-let currentEmailCounter = totalEmailCounter;
 const sku = 6426149; // Product sku to search from website. 6426149 => PS5 Disc Version
 
 // Request product status from Best Buy
@@ -79,36 +75,15 @@ const checkBestBuy = async () => {
 
 // Send mail with given options
 const sendMail = () => {
-  // If it's time to send out mail
-  if (checkMailLimit()) {
-    mail.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
-  }
+  mail.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
 };
 
-// Checks if mail should be sent
-const checkMailLimit = () => {
-  if (currentEmailCounter === totalEmailCounter) {
-    currentEmailCounter--;
-    return true;
-  }
-
-  if (currentEmailCounter === 1) {
-    currentEmailCounter = totalEmailCounter;
-    return false;
-  }
-
-  currentEmailCounter--;
-  return false;
-};
-
-// Request interval
-// setInterval(checkBestBuy, (60 / requestsPerHour) * 60000);
 (async () => {
   checkBestBuy();
 })();
